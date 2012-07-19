@@ -35,11 +35,8 @@ entity reg1in2out is
     Port ( CLK : in STD_LOGIC;
 			  IN1 : in  STD_LOGIC_VECTOR (31 downto 0);
            OUT1 : out  STD_LOGIC_VECTOR (31 downto 0);
-           OUT2 : out  STD_LOGIC_VECTOR (31 downto 0);
            LDEN : in  STD_LOGIC;
-           DR1EN : in  STD_LOGIC;
-           DR2EN : in  STD_LOGIC;
-			  
+		  
 			  -- Signals to handle in-place increment/decrement.
 			  -- If you are not going to use them, it's ok to leave them unconnected.
 			  -- The synthesizer will get rid of them and the associated logic (adder/sub)
@@ -53,14 +50,8 @@ architecture Behavioral of reg1in2out is
 signal VALUE : STD_LOGIC_VECTOR (31 downto 0);
 begin
 
+OUT1 <= VALUE;
 
-	WITH DR1EN SELECT
-    OUT1 <= VALUE WHEN '1',
-		    (others => 'Z') WHEN OTHERS;
-
-	WITH DR2EN SELECT
-    OUT2 <= VALUE WHEN '1',
-	      (others => 'Z') WHEN OTHERS;	
 
 process(clk)
 begin

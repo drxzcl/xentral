@@ -82,13 +82,12 @@ begin
 			case IIR(31 downto 28) is
 				when X"0" =>
 					-- Regular bus arbitration
-					IMM <= (others => 'Z'); -- Tristate the immediate value output 
 					IR <= IIR;
 					PC <= unsigned(PC) + 1;								
 				when X"1" =>
 					-- Immediate register load, signed value in IIR
 					IMM <= SXT(IIR(27 downto 4), IMM'length); -- Sign extension 
-					IR <= X"0000A00" & IIR(3 downto 0);	-- IRR(3 downto 0) <- IMM. Don't drive bus 1 from the execution unit.										
+					IR <= X"0000AB0" & IIR(3 downto 0);	-- IRR(3 downto 0) <- IMM. Don't drive bus 1 from the execution unit.										
 					PC <= unsigned(PC) + 1;								
 				when X"2" =>
 					-- Indirect register load
@@ -96,12 +95,10 @@ begin
 						when X"0" =>
 							-- Tranfer input register into MAR	
 							IR <= X"0000A" & IIR(11 downto 8) & X"0C";
-							IMM <= (others => 'Z'); -- Tristate the immediate value output							
 							PHASE <= unsigned(phase) + 1;
 						when others =>
 							-- Transfer MBR into output register
 							IR <= X"0000AD0" & IIR(3 downto 0);							
-							IMM <= (others => 'Z'); -- Tristate the immediate value output							
 							-- end of instruction, load the next instruction
 							PHASE <= (others => '0');
 							PC <= unsigned(PC) + 1;	
@@ -113,12 +110,10 @@ begin
 						when X"0" =>
 							-- Tranfer dest register into MAR	
 							IR <= X"0000B0" & IIR(7 downto 4) & X"C";	
-							IMM <= (others => 'Z'); -- Tristate the immediate value output														
 							PHASE <= unsigned(phase) + 1;
 						when others =>
 							-- Transfer source register into MBR
 							IR <= X"0000A" & IIR(11 downto 8) & X"0D";							
-							IMM <= (others => 'Z'); -- Tristate the immediate value output							
 							-- end of instruction, load the next instruction
 							PHASE <= (others => '0');
 							PC <= unsigned(PC) + 1;	
@@ -130,13 +125,11 @@ begin
 						when X"0" =>
 							-- DEC SP, Tranfer SP into MAR
 							IR <= X"0000A90C"; 
-							IMM <= (others => 'Z'); -- Tristate the immediate value output														
 							PHASE <= unsigned(phase) + 1;
 							SPDEC <= '1';
 						when others =>
 							-- Transfer bus3 into MBR 
 							IR <= X"0000" & IIR(15 downto 4) & X"D";	-- use operation and operands from instr.
-							IMM <= (others => 'Z'); -- Tristate the immediate value output							
 							SPDEC <= '0';
 							PHASE <= (others => '0');
 							PC <= unsigned(PC) + 1;	
@@ -148,7 +141,6 @@ begin
 						when X"0" =>
 							-- dec SP
 							SPINC <= '1';
-							IMM <= (others => 'Z'); -- Tristate the immediate value output														
 							IR <= X"00000000"; 
 							PHASE <= unsigned(phase) + 1;
 						when X"1" =>
@@ -168,7 +160,6 @@ begin
 						when X"0" =>
 							-- DEC SP, Tranfer SP into MAR
 							IR <= X"0000A90C"; 
-							IMM <= (others => 'Z'); -- Tristate the immediate value output														
 							PHASE <= unsigned(phase) + 1;
 							SPDEC <= '1';
 						when others =>
@@ -186,7 +177,6 @@ begin
 						when X"0" =>
 							-- dec SP
 							SPINC <= '1';
-							IMM <= (others => 'Z'); -- Tristate the immediate value output														
 							IR <= X"00000000"; 
 							PHASE <= unsigned(phase) + 1;
 						when X"1" =>

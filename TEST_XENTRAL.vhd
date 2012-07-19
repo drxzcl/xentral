@@ -61,7 +61,7 @@ ARCHITECTURE behavior OF TEST_XENTRAL IS
 	signal bus3:  STD_LOGIC_VECTOR (31 downto 0);
 
    -- Clock period definitions
-   constant clk_period : time := 50 ns;
+   constant clk_period : time := 10 ns;
  
 BEGIN
  
