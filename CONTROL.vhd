@@ -44,7 +44,8 @@ entity CONTROL is
            IMM : out  STD_LOGIC_VECTOR (31 downto 0);
            FLAGS: in  STD_LOGIC_VECTOR (7 downto 0);
 			  SPINC: out STD_LOGIC; -- Control the inc/dec of the
-			  SPDEC: out STD_LOGIC  -- stack pointer register.
+			  SPDEC: out STD_LOGIC; -- stack pointer register.
+			  NPC: in STD_LOGIC_VECTOR (31 downto 0)
 			  );
 end CONTROL;
 
@@ -161,6 +162,47 @@ begin
 							PHASE <= (others => '0');
 							PC <= unsigned(PC) + 1;	
 						end case;
+				when X"6" =>
+				-- CALL
+					case PHASE is
+						when X"0" =>
+							-- DEC SP, Tranfer SP into MAR
+							IR <= X"0000A90C"; 
+							IMM <= (others => 'Z'); -- Tristate the immediate value output														
+							PHASE <= unsigned(phase) + 1;
+							SPDEC <= '1';
+						when others =>
+							-- Transfer PC into bus1 into MBR 
+							-- JUMP!
+							IR <= X"0000A00D";	-- use operation and operands from instr.
+							IMM <= unsigned(PC)+1; -- Tristate the immediate value output							
+							SPDEC <= '0';
+							PHASE <= (others => '0');
+							PC <= X"0" & IIR(27 downto 0);
+						end case;
+				when X"7" =>
+					-- RET
+					case PHASE is
+						when X"0" =>
+							-- dec SP
+							SPINC <= '1';
+							IMM <= (others => 'Z'); -- Tristate the immediate value output														
+							IR <= X"00000000"; 
+							PHASE <= unsigned(phase) + 1;
+						when X"1" =>
+							-- Tranfer SP into MAR
+							SPINC <= '0';
+							IR <= X"0000A90C"; 
+							PHASE <= unsigned(phase) + 1;
+						when X"2" =>
+							-- Transfer MBR (D, bus1) into PC
+							IR <= X"0000AD00";
+							PHASE <= unsigned(phase) + 1;
+						when others =>
+						   -- JUMP
+							PC <= NPC;	
+							PHASE <= (others => '0');
+						end case;						
 				when X"b" =>
 					-- JS
 					if FLAGS(1) = '1' then

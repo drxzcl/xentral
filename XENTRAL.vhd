@@ -61,7 +61,7 @@ architecture Behavioral of XENTRAL is
 begin
 	
 	--CODEROM : entity work.CODEROM port map(bus3,bus1,DR1EN);
-	CONTROL : entity work.CONTROL port map(CLK,RESET,DR1,DR2,LD3,OP,bus1,FLAGS,SPINC,SPDEC);
+	CONTROL : entity work.CONTROL port map(CLK,RESET,DR1,DR2,LD3,OP,bus1,FLAGS,SPINC,SPDEC,bus3);
 
 	RAM : entity work.SIMPLERAM port map(clk,LDEN(12),LDEN(13),DR1EN(13),bus3(7 downto 0),bus3,bus1);
 	

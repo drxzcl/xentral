@@ -92,24 +92,32 @@
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/test_xentral/uut/R1/value" type="array" db_ref_id="1">
+      <obj_property name="DisplayName">label</obj_property>
       <obj_property name="ElementShortName">value[31:0]</obj_property>
       <obj_property name="ObjectShortName">value[31:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_xentral/uut/R3/value" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">value[31:0]</obj_property>
-      <obj_property name="ObjectShortName">value[31:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="label">R1</obj_property>
    </wvobject>
    <wvobject fp_name="/test_xentral/uut/R2/value" type="array" db_ref_id="1">
+      <obj_property name="DisplayName">label</obj_property>
       <obj_property name="ElementShortName">value[31:0]</obj_property>
       <obj_property name="ObjectShortName">value[31:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="label">R2</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_xentral/uut/R3/value" type="array" db_ref_id="1">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">value[31:0]</obj_property>
+      <obj_property name="ObjectShortName">value[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="label">R3</obj_property>
    </wvobject>
    <wvobject fp_name="/test_xentral/uut/SP/value" type="array" db_ref_id="1">
+      <obj_property name="DisplayName">label</obj_property>
       <obj_property name="ElementShortName">value[31:0]</obj_property>
       <obj_property name="ObjectShortName">value[31:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="label">SP</obj_property>
    </wvobject>
    <wvobject fp_name="/test_xentral/uut/RAM/ram" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">ram[0:255]</obj_property>
