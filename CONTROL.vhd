@@ -42,8 +42,9 @@ entity CONTROL is
            LD3 : out  STD_LOGIC_VECTOR (3 downto 0);
            OP : out  STD_LOGIC_VECTOR (3 downto 0);
            IMM : out  STD_LOGIC_VECTOR (31 downto 0);
-           FLAGS: in  STD_LOGIC_VECTOR (7 downto 0)
-           --PC : inout  STD_LOGIC_VECTOR (31 downto 0)			  			  
+           FLAGS: in  STD_LOGIC_VECTOR (7 downto 0);
+			  SPINC: out STD_LOGIC; -- Control the inc/dec of the
+			  SPDEC: out STD_LOGIC  -- stack pointer register.
 			  );
 end CONTROL;
 
@@ -66,13 +67,17 @@ begin
 	DR1 <= IR(11 downto 8);
 	OP <= IR(15 downto 12);	
 
+
 process(clk)
 begin
 	if (rising_edge(clk)) THEN
 		if (RESET = '1') THEN
 			PC <= (others => '0');
-			PHASE <= (others => '0');
+			PHASE <= (others => '0');			
+			SPINC <= '0';
+			SPDEC <= '0';
 		else 
+			-- Make sure decrementers and stuff do not bleed
 			case IIR(31 downto 28) is
 				when X"0" =>
 					-- Regular bus arbitration
@@ -89,11 +94,13 @@ begin
 					case PHASE is
 						when X"0" =>
 							-- Tranfer input register into MAR	
-							IR <= X"0000A" & IIR(11 downto 8) & X"0C";							
+							IR <= X"0000A" & IIR(11 downto 8) & X"0C";
+							IMM <= (others => 'Z'); -- Tristate the immediate value output							
 							PHASE <= unsigned(phase) + 1;
 						when others =>
 							-- Transfer MBR into output register
 							IR <= X"0000AD0" & IIR(3 downto 0);							
+							IMM <= (others => 'Z'); -- Tristate the immediate value output							
 							-- end of instruction, load the next instruction
 							PHASE <= (others => '0');
 							PC <= unsigned(PC) + 1;	
@@ -104,12 +111,53 @@ begin
 					case PHASE is
 						when X"0" =>
 							-- Tranfer dest register into MAR	
-							IR <= X"0000B0" & IIR(7 downto 4) & X"C";							
+							IR <= X"0000B0" & IIR(7 downto 4) & X"C";	
+							IMM <= (others => 'Z'); -- Tristate the immediate value output														
 							PHASE <= unsigned(phase) + 1;
 						when others =>
 							-- Transfer source register into MBR
 							IR <= X"0000A" & IIR(11 downto 8) & X"0D";							
+							IMM <= (others => 'Z'); -- Tristate the immediate value output							
 							-- end of instruction, load the next instruction
+							PHASE <= (others => '0');
+							PC <= unsigned(PC) + 1;	
+						end case;
+				when X"4" =>
+					-- push
+					-- Push whatever comes out of bus3
+					case PHASE is
+						when X"0" =>
+							-- DEC SP, Tranfer SP into MAR
+							IR <= X"0000A90C"; 
+							IMM <= (others => 'Z'); -- Tristate the immediate value output														
+							PHASE <= unsigned(phase) + 1;
+							SPDEC <= '1';
+						when others =>
+							-- Transfer bus3 into MBR 
+							IR <= X"0000" & IIR(15 downto 4) & X"D";	-- use operation and operands from instr.
+							IMM <= (others => 'Z'); -- Tristate the immediate value output							
+							SPDEC <= '0';
+							PHASE <= (others => '0');
+							PC <= unsigned(PC) + 1;	
+						end case;
+				when X"5" =>
+					-- pop
+					-- pop top of stack into destination register
+					case PHASE is
+						when X"0" =>
+							-- dec SP
+							SPINC <= '1';
+							IMM <= (others => 'Z'); -- Tristate the immediate value output														
+							IR <= X"00000000"; 
+							PHASE <= unsigned(phase) + 1;
+						when X"1" =>
+							-- Tranfer SP into MAR
+							SPINC <= '0';
+							IR <= X"0000A90C"; 
+							PHASE <= unsigned(phase) + 1;
+						when others =>
+							-- Transfer MBR (D, bus1) into bus3
+							IR <= X"0000AD0" & IIR(3 downto 0);	
 							PHASE <= (others => '0');
 							PC <= unsigned(PC) + 1;	
 						end case;

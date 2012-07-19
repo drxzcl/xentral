@@ -15,7 +15,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="19" />
+   <WVObjectSize size="21" />
    <wvobject fp_name="/test_xentral/clk" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -75,6 +75,41 @@
    <wvobject fp_name="/test_xentral/uut/RAM/drdataout" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">drdataout</obj_property>
       <obj_property name="ObjectShortName">drdataout</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_xentral/uut/CONTROL/ir" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">ir[31:0]</obj_property>
+      <obj_property name="ObjectShortName">ir[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_xentral/uut/CONTROL/iir" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">iir[31:0]</obj_property>
+      <obj_property name="ObjectShortName">iir[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_xentral/uut/CONTROL/pc" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">pc[31:0]</obj_property>
+      <obj_property name="ObjectShortName">pc[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_xentral/uut/R1/value" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">value[31:0]</obj_property>
+      <obj_property name="ObjectShortName">value[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_xentral/uut/R3/value" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">value[31:0]</obj_property>
+      <obj_property name="ObjectShortName">value[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_xentral/uut/R2/value" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">value[31:0]</obj_property>
+      <obj_property name="ObjectShortName">value[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_xentral/uut/SP/value" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">value[31:0]</obj_property>
+      <obj_property name="ObjectShortName">value[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/test_xentral/uut/RAM/ram" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">ram[0:255]</obj_property>
@@ -1360,30 +1395,5 @@
          <obj_property name="ObjectShortName">ram[255]</obj_property>
          <obj_property name="Radix">HEXRADIX</obj_property>
       </wvobject>
-   </wvobject>
-   <wvobject fp_name="/test_xentral/uut/CONTROL/ir" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">ir[31:0]</obj_property>
-      <obj_property name="ObjectShortName">ir[31:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_xentral/uut/CONTROL/iir" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">iir[31:0]</obj_property>
-      <obj_property name="ObjectShortName">iir[31:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_xentral/uut/CONTROL/pc" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">pc[31:0]</obj_property>
-      <obj_property name="ObjectShortName">pc[31:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_xentral/uut/R1/value" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">value[31:0]</obj_property>
-      <obj_property name="ObjectShortName">value[31:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_xentral/uut/R3/value" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">value[31:0]</obj_property>
-      <obj_property name="ObjectShortName">value[31:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
 </wave_config>

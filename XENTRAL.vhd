@@ -55,10 +55,13 @@ architecture Behavioral of XENTRAL is
 	signal ALUFLAGS: STD_LOGIC_VECTOR (3 downto 0);
 	signal FLAGS: STD_LOGIC_VECTOR (7 downto 0);
 	
+	signal SPINC: STD_LOGIC; -- Stack pointer INC/DEC
+	signal SPDEC: STD_LOGIC;
+	
 begin
 	
 	--CODEROM : entity work.CODEROM port map(bus3,bus1,DR1EN);
-	CONTROL : entity work.CONTROL port map(CLK,RESET,DR1,DR2,LD3,OP,bus1,FLAGS);
+	CONTROL : entity work.CONTROL port map(CLK,RESET,DR1,DR2,LD3,OP,bus1,FLAGS,SPINC,SPDEC);
 
 	RAM : entity work.SIMPLERAM port map(clk,LDEN(12),LDEN(13),DR1EN(13),bus3(7 downto 0),bus3,bus1);
 	
@@ -81,7 +84,7 @@ begin
 	R6 : entity work.reg1in2out port map (clk,bus3,bus1,bus2,LDEN(6),DR1EN(6),DR2EN(6));
 	R7 : entity work.reg1in2out port map (clk,bus3,bus1,bus2,LDEN(7),DR1EN(7),DR2EN(7));
 	R8 : entity work.reg1in2out port map (clk,bus3,bus1,bus2,LDEN(8),DR1EN(8),DR2EN(8));
-	SP : entity work.reg1in2out port map (clk,bus3,bus1,bus2,LDEN(9),DR1EN(9),DR2EN(9));
+	SP : entity work.reg1in2out port map (clk,bus3,bus1,bus2,LDEN(9),DR1EN(9),DR2EN(9),SPINC,SPDEC);
 
 process(clk)
 begin

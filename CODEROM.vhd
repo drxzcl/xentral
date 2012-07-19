@@ -41,9 +41,14 @@ signal IMCR : STD_LOGIC_VECTOR (31 downto 0);
 begin
 WITH MAR SELECT
 		IMCR <= 
+		 X"1FFFFFF9"	WHEN X"00000000", -- Initialize SP
+		 X"100000C1"	WHEN X"00000001", -- R1 <- 12
+		 --X"0000A90C"	WHEN X"00000002", -- 
+		 X"4000A100"	WHEN X"00000002", -- PUSH R1
+		 X"50000002"	WHEN X"00000003", -- POP R2
+		 X"f0000002"	WHEN X"00000004", -- JMP 2
 			
-			
---		 -- Fill memory with counter using multi-clock instructions
+		 -- Fill memory with counter using multi-clock instructions
 --		 X"1FFFFFA1"	WHEN X"00000000", -- R1 <- -5
 --		 X"30000110"	WHEN X"00000001", -- [R1] <- R1
 --		 X"20000103"   WHEN X"00000002", -- R3 <- [R1]
