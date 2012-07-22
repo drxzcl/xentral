@@ -29,12 +29,12 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity DEMUX16 is
+entity DECODE16 is
     Port ( sel : in  STD_LOGIC_VECTOR (3 downto 0);
            demuxout : out  STD_LOGIC_VECTOR (15 downto 0));
-end DEMUX16;
+end DECODE16;
 
-architecture Behavioral of DEMUX16 is
+architecture Behavioral of DECODE16 is
 
 begin
 	WITH sel SELECT
