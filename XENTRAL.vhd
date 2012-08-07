@@ -63,11 +63,29 @@ architecture Behavioral of XENTRAL is
 	signal RAMREADEN: STD_LOGIC;
 	
 begin
-	
-	--CODEROM : entity work.CODEROM port map(bus3,bus1,DR1EN);
 	CONTROL : entity work.CONTROL port map(CLK,RESET,DR1,DR2,LD3,OP,IMMO,FLAGS,SPINC,SPDEC,bus3);
 	
-	DEMUX3 : entity work.DEMUX16 port map(LD3,LDEN);
+	ALU1 : entity work.ALU port map(bus1,bus2,OP,bus3,ALUFLAGS);
+	
+	R1 : entity work.reg1in2out port map (clk,bus3,R1O,LDEN(1));
+	R2 : entity work.reg1in2out port map (clk,bus3,R2O,LDEN(2));
+	R3 : entity work.reg1in2out port map (clk,bus3,R3O,LDEN(3));
+	R4 : entity work.reg1in2out port map (clk,bus3,R4O,LDEN(4));
+	R5 : entity work.reg1in2out port map (clk,bus3,R5O,LDEN(5));
+	R6 : entity work.reg1in2out port map (clk,bus3,R6O,LDEN(6));
+	R7 : entity work.reg1in2out port map (clk,bus3,R7O,LDEN(7));
+	R8 : entity work.reg1in2out port map (clk,bus3,R8O,LDEN(8));
+	SP : entity work.reg1in2out port map (clk,bus3,SPO,LDEN(9),SPINC,SPDEC);
+
+	-- Only read memory when it's being read from the bus.
+	-- This prevents read/write conflicts when the synthesizer
+	-- implement RAM with single-port block ram.
+	WITH DR1 SELECT
+		RAMREADEN <= 
+			'1' when x"D",
+			'0' when others;
+		
+	RAM : entity work.SIMPLERAM port map(clk,LDEN(12),LDEN(13),RAMREADEN,bus3(7 downto 0),bus3,RAMO);
 	
 	DRIVESEL1: entity work.DRIVESEL port map(DR1,bus1,
 			X"00000000",
@@ -93,29 +111,7 @@ begin
 			X"00000001"			
 			);
 
-	
-	ALU1 : entity work.ALU port map(bus1,bus2,OP,bus3,ALUFLAGS);
-	
-	--DEADBEEF : entity work.CONST generic map(X"DEADBEEF") port map (DR1EN(14),bus1);
-	--BEEFDEAD : entity work.CONST generic map(X"BEEFDEAD") port map (DR2EN(14),bus2);
-	
-	R1 : entity work.reg1in2out port map (clk,bus3,R1O,LDEN(1));
-	R2 : entity work.reg1in2out port map (clk,bus3,R2O,LDEN(2));
-	R3 : entity work.reg1in2out port map (clk,bus3,R3O,LDEN(3));
-	R4 : entity work.reg1in2out port map (clk,bus3,R4O,LDEN(4));
-	R5 : entity work.reg1in2out port map (clk,bus3,R5O,LDEN(5));
-	R6 : entity work.reg1in2out port map (clk,bus3,R6O,LDEN(6));
-	R7 : entity work.reg1in2out port map (clk,bus3,R7O,LDEN(7));
-	R8 : entity work.reg1in2out port map (clk,bus3,R8O,LDEN(8));
-	SP : entity work.reg1in2out port map (clk,bus3,SPO,LDEN(9),SPINC,SPDEC);
-
-	WITH DR1 SELECT
-		RAMREADEN <= 
-			'1' when x"D",
-			'0' when others;
-		
-	RAM : entity work.SIMPLERAM port map(clk,LDEN(12),LDEN(13),RAMREADEN,bus3(7 downto 0),bus3,RAMO);
-
+	DECODE3 : entity work.DECODE16 port map(LD3,LDEN);	
 
 process(clk)
 begin
