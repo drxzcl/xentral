@@ -44,8 +44,8 @@ WITH MAR SELECT
 		-- Fill memory with counter using multi-clock instructions
 		 X"1FFFFFF9"	WHEN X"00000000", -- Initialize SP
 		 X"1FFFFFA1"	WHEN X"00000001", -- R1 <- -5
-		 X"30000110"	WHEN X"00000002", -- [R1] <- R1
-		 X"20000103"   WHEN X"00000003", -- R3 <- [R1]
+		 X"3A10A100"	WHEN X"00000002", -- [R1] <- R1
+		 X"250FA103"   WHEN X"00000003", -- R3 <- [R1] + 1
 		 X"000051F2"	WHEN X"00000004", -- R2 <- R1 + 1
 		 X"0000A201"	WHEN X"00000005", -- R1 <- R2
 		 X"f0000002"	WHEN X"00000006", -- JMP 2

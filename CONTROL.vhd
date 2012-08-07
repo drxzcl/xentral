@@ -85,18 +85,18 @@ begin
 				when X"1" =>
 					-- Immediate register load, signed value in IR
 					IMM <= SXT(IR(27 downto 4), IMM'length); -- Sign extension 
-					CONTR <= X"0000AB0" & IR(3 downto 0);	-- IRR(3 downto 0) <- IMM. Don't drive bus 1 from the execution unit.										
+					CONTR <= X"0000AB0" & IR(3 downto 0);	-- IRR(3 downto 0) <- IMM. 										
 					PC <= unsigned(PC) + 1;								
 				when X"2" =>
 					-- Indirect register load
 					case PHASE is
 						when X"0" =>
-							-- Tranfer input register into MAR	
-							CONTR <= X"0000A" & IR(11 downto 8) & X"0C";
+							-- Tranfer bottom ALU operation into MAR	
+							CONTR <= X"0000" & IR(15 downto 4) & X"C";	
 							PHASE <= unsigned(phase) + 1;
 						when others =>
-							-- Transfer MBR into output register
-							CONTR <= X"0000AD0" & IR(3 downto 0);							
+							-- Transfer MBR + top ALU into output register
+							CONTR <= X"0000" & IR(27 downto 24) & X"D" & IR(19 downto 16) & IR(3 downto 0);							
 							-- end of instruction, load the next instruction
 							PHASE <= (others => '0');
 							PC <= unsigned(PC) + 1;	
@@ -106,12 +106,12 @@ begin
 					-- (Store the contents of rN at the address in rM)
 					case PHASE is
 						when X"0" =>
-							-- Tranfer dest register into MAR	
-							CONTR <= X"0000B0" & IR(7 downto 4) & X"C";	
+							-- Tranfer bottom ALU operation into MAR	
+							CONTR <= X"0000" & IR(15 downto 4) & X"C";	
 							PHASE <= unsigned(phase) + 1;
 						when others =>
-							-- Transfer source register into MBR
-							CONTR <= X"0000A" & IR(11 downto 8) & X"0D";							
+							-- Transfer top ALU operation into MBR
+							CONTR <= X"0000" & IR(27 downto 16) & X"D";							
 							-- end of instruction, load the next instruction
 							PHASE <= (others => '0');
 							PC <= unsigned(PC) + 1;	

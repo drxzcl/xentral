@@ -91,9 +91,9 @@
       <obj_property name="ObjectShortName">ir[31:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/test_xentral/uut/CONTROL/iir" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">iir[31:0]</obj_property>
-      <obj_property name="ObjectShortName">iir[31:0]</obj_property>
+   <wvobject fp_name="/test_xentral/uut/CONTROL/contr" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">contr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">contr[31:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/test_xentral/uut/CONTROL/pc" type="array" db_ref_id="1">
