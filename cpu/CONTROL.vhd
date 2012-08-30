@@ -218,7 +218,8 @@ begin
 				when X"f" =>
 					-- Absolute jump!
 					CONTR <= (others => '0'); -- Tristate everything so execution unit state is preserved
-					PC <= X"0" & IR(27 downto 0);
+					-- Since we only have 28 bits available for the address, take over the high nibble from PC
+					PC(27 downto 0) <= IR(27 downto 0);
 				when others =>
 					null;
 			end case;
