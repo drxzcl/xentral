@@ -57,6 +57,7 @@ begin
    -- Output
    R <= RR(31 downto 0);
    -- Flags
+	ALUFLAGS(3) <= '0';
    ALUFLAGS(1) <= RR(31); -- SIGN
    ALUFLAGS(2) <= RR(32); -- CARRY
    WITH RR(31 downto 0) SELECT ALUFLAGS(0) -- ZERO
