@@ -190,31 +190,48 @@ begin
 						   -- JUMP
 							PC <= NPC;	
 							PHASE <= (others => '0');
-						end case;						
-				when X"b" =>
-					-- JS
-					if FLAGS(1) = '1' then
-						CONTR <= (others => '0'); -- Tristate everything so execution unit state is preserved
-						PC <= X"0" & IR(27 downto 0);						
-					end if;
-				when X"c" =>
-					-- JNS
-					if FLAGS(1) = '0' then
-						CONTR <= (others => '0'); -- Tristate everything so execution unit state is preserved
-						PC <= X"0" & IR(27 downto 0);						
-					end if;
+						end case;
 				when X"d" =>
-					-- JZ
-					if FLAGS(0) = '1' then
-						CONTR <= (others => '0'); -- Tristate everything so execution unit state is preserved
-						PC <= X"0" & IR(27 downto 0);						
-					end if;
+					-- Conditional relative jump
+					CONTR <= (others => '0'); -- Tristate everything so execution unit state is preserved
+					case IR(27 downto 24) is
+						when X"0" =>
+							-- JS
+							if FLAGS(1) = '1' then							
+								PC <= X"deadbeef"; --PC + SXT(IR(23 downto 0), PC'length);
+							else
+								PC <= PC + 1;
+							end if;
+						when X"1" =>
+							-- JNS
+							if FLAGS(1) = '0' then
+								PC <= PC + SXT(IR(23 downto 0), PC'length);
+							else
+								PC <= PC + 1;
+							end if;
+						when X"2" =>
+							-- JZ
+							if FLAGS(0) = '1' then
+								PC <= PC + SXT(IR(23 downto 0), PC'length);
+							else
+								PC <= PC + 1;
+							end if;
+						when X"3" =>
+							-- JNZ
+							if FLAGS(0) = '0' then
+								PC <= PC + SXT(IR(23 downto 0), PC'length);
+							else
+								PC <= PC + 1;
+							end if;
+						when others =>
+							null;
+					end case;
 				when X"e" =>
-					-- JNZ
-					if FLAGS(0) = '0' then
-						CONTR <= (others => '0'); -- Tristate everything so execution unit state is preserved
-						PC <= X"0" & IR(27 downto 0);						
-					end if;
+					-- Indexed jump
+					-- Jump to the address on BUS3.
+					-- Transfer bus3 into NPC 
+					CONTR <= X"0000" & IR(15 downto 4) & X"0";	-- use operation and operands from instr.
+					PC <= NPC;											
 				when X"f" =>
 					-- Absolute jump!
 					CONTR <= (others => '0'); -- Tristate everything so execution unit state is preserved
@@ -223,7 +240,6 @@ begin
 				when others =>
 					null;
 			end case;
-
 		end if;
 	end if;
 end process;
