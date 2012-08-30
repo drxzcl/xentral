@@ -16,8 +16,8 @@ def parser(src):
     with open(src,'r') as f:
         for line in f:
             line = line.strip()
-            # ignore everything after '#'
-            line = line.split("#")[0].strip()
+            # ignore everything after ';'
+            line = line.split(";")[0].strip()
             # 
             # At the moment there are three acceptable line compositions:
             # 1) A statement
@@ -49,6 +49,7 @@ busindirect2re = re.compile("\[(((R\d)(\+|-|&|\|)(R\d))|((-|~|)(R\d)))\]((\+|-|&
 operand_type_re = [
     ("IMM",re.compile("0x[0-9,a-f,A-F]+$")),
     ("R",re.compile("(R\d|SP)$")),
+    ("C",re.compile("(Z|NZ|S|NS)$")),
     ("LBL",re.compile("([A-Z,a-z][A-Z,a-z,0-9]*)$")),
     ("B",busre),
     ("BI", busindirectre),
@@ -205,7 +206,38 @@ def movINDR(operands):
 
 def jmpIMM(operands):
     inst = 0xf0000000
-    inst += operands[0]
+    inst += operands[0] & 0x0fffffff
+    return inst
+
+def jmpB(operands):
+    inst = 0xe0000000
+    mo = busre.match(operands[0])
+    # Unary or binary?
+    if mo.group(1):
+        # Binary    
+        inst += operation_code[mo.group(3)] << 12 # OP
+        inst += encode_register(mo.group(2)) << 8 # LD1
+        inst += encode_register(mo.group(4)) << 4 # LD2
+        return inst
+    else:
+        # Unary        
+        inst += operation_code["U"+mo.group(6)] << 12 # OP
+        inst += encode_register(mo.group(7)) << 8 # LD1
+        return inst
+    return inst
+
+conditionals = {
+    "S":0,
+    "NS":1,
+    "Z":2,
+    "NZ":3,
+}
+
+def brCIMM(operands):
+    inst = 0xd0000000
+    cond = conditionals[operands[0]]
+    inst += cond << 24 
+    inst += operands[1] & 0x00ffffff
     return inst
 
 assemblers = {
@@ -216,6 +248,8 @@ assemblers = {
     ("MOV","B","BI"):movBBI,
     ("MOV","IMM","R"):movIMMR,
     ("JMP","IMM"):jmpIMM,
+    ("JMP","B"):jmpB,
+    ("BR","C","IMM"):brCIMM,
 }
 
 def assemble(src):
@@ -252,24 +286,54 @@ def assemble(src):
     # PASS TWO
     for address, sig, operands in usedlabels:
         # perform label address replacement
+        print sig
         for i,t in enumerate(sig[1:]):
+            print i,t
             if t == "LBL":
                 sig[i+1] = "IMM"
-                operands[i] = labels[operands[i]]
+                if sig[0] == "JMP":
+                    # Absolute
+                    operands[i] = labels[operands[i]]
+                elif sig[0] == "BR":
+                    # Relative
+                    rel = labels[operands[i]] - address
+                    operands[i] = rel
+                else:
+                    raise RuntimeError, "%r" % sig
+        print sig
         inst = assemblers[tuple(sig)](operands)
         program[address] = inst
     
     print ["%08x" % i for i in program]
+    return program
+
+
+def write_vhdl(of,p):
+    for i,c in enumerate(p):
+        print >>of,'X"%08x" WHEN X"%08x",' % (c,i) 
+        
 
 
 def main():
     parser = argparse.ArgumentParser(description='Assembler for XENTRAL CPU.')
     parser.add_argument('src', metavar='source.asm', type=unicode, nargs=1,
                        help='the file to assemble')
+    parser.add_argument('-o', metavar='output', type=unicode, nargs=1, default="",
+                       help='output file. Default is stdout')
+    parser.add_argument('-t', metavar='output_type', type=unicode, nargs=1, default="VHDL",
+                       help='output type (VHDL) Default is VHDL')
 
     args = parser.parse_args()
     src = args.src[0]
-    assemble(src)
+    p = assemble(src)
+
+    of = sys.stdout
+    if args.o:
+        of = open("".join(args.o),"w")
+    if args.t == "VHDL":
+        write_vhdl(of,p) 
+    else:
+        raise RuntimeError, "Unknown output format %s" % args.t
     
     
     
