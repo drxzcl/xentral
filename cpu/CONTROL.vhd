@@ -216,9 +216,9 @@ begin
 						PC <= X"0" & IR(27 downto 0);						
 					end if;
 				when X"f" =>
-					-- Relative immediate jump!
+					-- Absolute jump!
 					CONTR <= (others => '0'); -- Tristate everything so execution unit state is preserved
-					PC <= PC + SXT(IR(27 downto 0), PC'length);
+					PC <= X"0" & IR(27 downto 0);
 				when others =>
 					null;
 			end case;
