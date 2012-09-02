@@ -3,7 +3,7 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="C:/Dev/fpga/xentral/TEST_XENTRAL_isim_beh.wdb" id="1" type="auto">
+      <db_ref path="C:/Dev/fpga/xentral/cpu/TEST_XENTRAL_isim_beh.wdb" id="1" type="auto">
          <top_modules>
             <top_module name="attributes" />
             <top_module name="numeric_std" />
@@ -15,7 +15,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="23" />
+   <WVObjectSize size="15" />
    <wvobject fp_name="/test_xentral/clk" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -24,19 +24,9 @@
       <obj_property name="ElementShortName">reset</obj_property>
       <obj_property name="ObjectShortName">reset</obj_property>
    </wvobject>
-   <wvobject fp_name="/test_xentral/clk_period" type="other" db_ref_id="1">
-      <obj_property name="ElementShortName">clk_period</obj_property>
-      <obj_property name="ObjectShortName">clk_period</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
    <wvobject fp_name="/test_xentral/bus1" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">bus1[31:0]</obj_property>
       <obj_property name="ObjectShortName">bus1[31:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_xentral/uut/DRIVESEL1/sel" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">sel[3:0]</obj_property>
-      <obj_property name="ObjectShortName">sel[3:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/test_xentral/bus2" type="array" db_ref_id="1">
@@ -44,47 +34,18 @@
       <obj_property name="ObjectShortName">bus2[31:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/test_xentral/uut/DRIVESEL2/sel" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">sel[3:0]</obj_property>
-      <obj_property name="ObjectShortName">sel[3:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
    <wvobject fp_name="/test_xentral/bus3" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">bus3[31:0]</obj_property>
       <obj_property name="ObjectShortName">bus3[31:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/test_xentral/uut/RAM/address" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">address[7:0]</obj_property>
-      <obj_property name="ObjectShortName">address[7:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
+   <wvobject fp_name="/test_xentral/uut/aluflags" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">aluflags[3:0]</obj_property>
+      <obj_property name="ObjectShortName">aluflags[3:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/test_xentral/uut/RAM/datain" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">datain[31:0]</obj_property>
-      <obj_property name="ObjectShortName">datain[31:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_xentral/uut/RAM/dataout" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">dataout[31:0]</obj_property>
-      <obj_property name="ObjectShortName">dataout[31:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_xentral/uut/RAM/read_address" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">read_address[7:0]</obj_property>
-      <obj_property name="ObjectShortName">read_address[7:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_xentral/uut/RAM/ldaddress" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">ldaddress</obj_property>
-      <obj_property name="ObjectShortName">ldaddress</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_xentral/uut/RAM/lddatain" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">lddatain</obj_property>
-      <obj_property name="ObjectShortName">lddatain</obj_property>
-   </wvobject>
-   <wvobject fp_name="/test_xentral/uut/RAM/drdataout" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">drdataout</obj_property>
-      <obj_property name="ObjectShortName">drdataout</obj_property>
+   <wvobject fp_name="/test_xentral/uut/flags" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">flags[7:0]</obj_property>
+      <obj_property name="ObjectShortName">flags[7:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/test_xentral/uut/CONTROL/ir" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">ir[31:0]</obj_property>

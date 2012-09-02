@@ -33,7 +33,6 @@ use IEEE.STD_LOGIC_MISC.ALL;
 use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_SIGNED.ALL;
 
-
 entity CONTROL is
     Port ( CLK : in STD_LOGIC;
 			  RESET: in STD_LOGIC;
@@ -194,38 +193,45 @@ begin
 				when X"d" =>
 					-- Conditional relative jump
 					CONTR <= (others => '0'); -- Tristate everything so execution unit state is preserved
-					case IR(27 downto 24) is
+					-- Wait a cycle to allow the execution unit to catch up.
+					case PHASE is
 						when X"0" =>
-							-- JS
-							if FLAGS(1) = '1' then							
-								PC <= X"deadbeef"; --PC + SXT(IR(23 downto 0), PC'length);
-							else
-								PC <= PC + 1;
-							end if;
-						when X"1" =>
-							-- JNS
-							if FLAGS(1) = '0' then
-								PC <= PC + SXT(IR(23 downto 0), PC'length);
-							else
-								PC <= PC + 1;
-							end if;
-						when X"2" =>
-							-- JZ
-							if FLAGS(0) = '1' then
-								PC <= PC + SXT(IR(23 downto 0), PC'length);
-							else
-								PC <= PC + 1;
-							end if;
-						when X"3" =>
-							-- JNZ
-							if FLAGS(0) = '0' then
-								PC <= PC + SXT(IR(23 downto 0), PC'length);
-							else
-								PC <= PC + 1;
-							end if;
+							PHASE <= unsigned(phase) + 1;
 						when others =>
-							null;
-					end case;
+							PHASE <= (others => '0');
+							case IR(27 downto 24) is
+								when X"0" =>
+									-- JS
+									if FLAGS(1) = '1' then							
+										PC <= PC + SXT(IR(23 downto 0), PC'length);
+									else
+										PC <= PC + 1;
+									end if;
+								when X"1" =>
+									-- JNS
+									if FLAGS(1) = '0' then
+										PC <= PC + SXT(IR(23 downto 0), PC'length);
+									else
+										PC <= PC + 1;
+									end if;
+								when X"2" =>
+									-- JZ
+									if FLAGS(0) = '1' then
+										PC <= PC + SXT(IR(23 downto 0), PC'length);
+									else
+										PC <= PC + 1;
+									end if;
+								when X"3" =>
+									-- JNZ
+									if FLAGS(0) = '0' then
+										PC <= PC + SXT(IR(23 downto 0), PC'length);
+									else
+										PC <= PC + 1;
+									end if;
+								when others =>
+									null;
+							end case;
+						end case;
 				when X"e" =>
 					-- Indexed jump
 					-- Jump to the address on BUS3.

@@ -113,6 +113,8 @@ begin
 
 	DECODE3 : entity work.DECODE16 port map(LD3,LDEN);	
 
+	FLAGS(7 downto 4) <= x"0";  -- Tie unused flags to ground to prevent Us from throwing the sim for a loop.
+
 process(clk)
 begin
 	if (rising_edge(clk)) THEN
