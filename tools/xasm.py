@@ -69,6 +69,8 @@ def operand_type(operand):
 
 
 def encode_register(reg):
+    if reg == "SP":
+        return 0x9
     return int(reg[1])
 
 
