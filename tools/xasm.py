@@ -64,7 +64,7 @@ def operand_type(operand):
     for code, opre in operand_type_re:
         if opre.match(operand):
             return code
-    raise SyntaxError
+    raise SyntaxError, "Cannot determine operand type: %r" % operand
     
 
 
