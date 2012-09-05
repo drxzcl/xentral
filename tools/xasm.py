@@ -198,7 +198,7 @@ def movBBI(operands):
 
 def movIMMR(operands):
     inst = 0x10000000
-    inst += int(operands[0],16) << 4
+    inst += (int(operands[0],16) & 0x00ffffff) << 4
     inst += encode_register(operands[1])      # DR3
     return inst
     
