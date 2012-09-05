@@ -127,7 +127,8 @@ def movBI2R(operands):
     if mo.group(9):
         inst += operation_code[mo.group(10)] << 24 # OP
         inst += encode_register(mo.group(11)) << 16 # LD1
-        
+    else:
+        inst += 0xA << 24        
 
     return inst
 
@@ -165,36 +166,7 @@ def movBBI(operands):
         inst += operation_code["U"+mo.group(7)] << 12 # OP
         inst += encode_register(mo.group(8)) << 8 # LD1
     
-    return inst
-    
-    mo = busindirect2re.match(operands[0])
-    print operands
-    print mo.groups()
-    print mo.group(0)
-
-    # Destination register
-    inst += encode_register(operands[1])      # DR3
-   
-    # Main adressing group (Bottom ALU)
-    # Unary or binary?
-    if mo.group(2):
-        # Binary    
-        inst += operation_code[mo.group(4)] << 12 # OP
-        inst += encode_register(mo.group(3)) << 8 # LD1
-        inst += encode_register(mo.group(5)) << 4 # LD2
-    else:
-        # Unary        
-        inst += operation_code["U"+mo.group(7)] << 12 # OP
-        inst += encode_register(mo.group(8)) << 8 # LD1
-
-    # Content adjust group, (Top ALU)
-    if mo.group(9):
-        inst += operation_code[mo.group(10)] << 24 # OP
-        inst += encode_register(mo.group(11)) << 16 # LD1
-        
-
-    return inst
-
+    return inst   
 
 def movIMMR(operands):
     inst = 0x10000000
@@ -247,6 +219,7 @@ assemblers = {
     ("MOV","B","R"):movBR,
     ("MOV","BI","R"):movBI2R,
     ("MOV","BI2","R"):movBI2R,
+    ("MOV","R","BI"):movBBI,
     ("MOV","B","BI"):movBBI,
     ("MOV","IMM","R"):movIMMR,
     ("JMP","IMM"):jmpIMM,
