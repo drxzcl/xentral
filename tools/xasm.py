@@ -16,6 +16,7 @@ def parser(src):
     with open(src,'r') as f:
         for line in f:
             line = line.strip()
+            print line
             # ignore everything after ';'
             line = line.split(";")[0].strip()
             # 
@@ -40,11 +41,11 @@ def parser(src):
                 yield "STATEMENT", (opcode, operands)
                 continue
             # If we get here: trouble!
-            raise SyntaxError
+            raise SyntaxError, "Cannot parse as statement or label: %r" % line
 
-busre = re.compile("((R\d)(\+|-|&|\|)(R\d))|((-|~|)(R\d))$")
-busindirectre = re.compile("\[(((R\d)(\+|-|&|\|)(R\d))|((-|~|)(R\d)))\]$")
-busindirect2re = re.compile("\[(((R\d)(\+|-|&|\|)(R\d))|((-|~|)(R\d)))\]((\+|-|&|\|)(R\d))?$")
+busre = re.compile("((R\d|SP)(\+|-|&|\||\^)(R\d|SP))|((-|~|)(R\d|SP))$")
+busindirectre = re.compile("\[(((R\d)(\+|-|&|\||\^)(R\d))|((-|~|)(R\d)))\]$")
+busindirect2re = re.compile("\[(((R\d)(\+|-|&|\||\^)(R\d))|((-|~|)(R\d)))\]((\+|-|&|\||\^)(R\d))?$")
 
 operand_type_re = [
     ("IMM",re.compile("0x[0-9,a-f,A-F]+$")),
@@ -61,6 +62,8 @@ def operand_type(operand):
     """
         Determine operand type
     """
+    if not operand:
+        return ""
     for code, opre in operand_type_re:
         if opre.match(operand):
             return code
@@ -214,6 +217,36 @@ def brCIMM(operands):
     inst += operands[1] & 0x00ffffff
     return inst
 
+def pushB(operands):
+    inst = 0x40000000
+    mo = busre.match(operands[0])
+    
+    # Unary or binary?
+    if mo.group(1):
+        # Binary    
+        inst += operation_code[mo.group(3)] << 12 # OP
+        inst += encode_register(mo.group(2)) << 8 # LD1
+        inst += encode_register(mo.group(4)) << 4 # LD2
+        return inst
+    else:
+        # Unary        
+        inst += operation_code["U"+mo.group(6)] << 12 # OP
+        inst += encode_register(mo.group(7)) << 8 # LD1
+        return inst
+
+def popR(operands):
+    inst = 0x50000000
+    inst += encode_register(operands[0])      # DR3
+    return inst
+
+def ret(operands):
+    return 0x70000000
+
+def callIMM(operands):
+    inst = 0x60000000
+    inst += operands[0] & 0x0fffffff
+    return inst
+
 assemblers = {
     ("MOV","R","R"):movBR,
     ("MOV","B","R"):movBR,
@@ -225,6 +258,11 @@ assemblers = {
     ("JMP","IMM"):jmpIMM,
     ("JMP","B"):jmpB,
     ("BR","C","IMM"):brCIMM,
+    ("PUSH","R"):pushB,
+    ("PUSH","B"):pushB,
+    ("POP","R"):popR,
+    ("RET",""):ret,
+    ("CALL","IMM"):callIMM,
 }
 
 def assemble(src):
@@ -269,12 +307,14 @@ def assemble(src):
                 if sig[0] == "JMP":
                     # Absolute
                     operands[i] = labels[operands[i]]
+                elif sig[0] == "CALL":
+                    operands[i] = labels[operands[i]]
                 elif sig[0] == "BR":
                     # Relative
                     rel = labels[operands[i]] - address
                     operands[i] = rel
                 else:
-                    raise RuntimeError, "%r" % sig
+                    raise RuntimeError, "Unknown opcode %r" % sig
         print sig
         inst = assemblers[tuple(sig)](operands)
         program[address] = inst
