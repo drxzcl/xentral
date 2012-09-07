@@ -162,7 +162,7 @@ begin
 						when others =>
 							-- Transfer PC into bus1 into MBR 
 							-- JUMP!
-							CONTR <= X"0000A00D";	-- use operation and operands from instr.
+							CONTR <= X"0000AB0D";	-- use operation and operands from instr.
 							IMM <= unsigned(PC)+1; -- Tristate the immediate value output							
 							SPDEC <= '0';
 							PHASE <= (others => '0');
