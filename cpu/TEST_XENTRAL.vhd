@@ -88,20 +88,9 @@ BEGIN
    stim_proc: process
    begin		
       -- hold reset state for 100 ns.
-      wait for 100 ns;
-		wait for clk_period/2;	
-		--PC <= (others => '0');		
-		-- 
-		--INSTR <= X"00001EF1";
 		reset <= '1';
-      wait for clk_period;
+      wait for 100 ns;
 		reset <= '0';
-		--INSTR <= X"00005000";
-      wait for clk_period;
-		--INSTR <= X"00005112";
-      wait for clk_period;
-		-- <= X"00005221";
-		wait for clk_period;
 
       wait;
    end process;
