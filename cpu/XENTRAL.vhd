@@ -61,12 +61,16 @@ architecture Behavioral of XENTRAL is
 	
 	-- All driver signals
 	signal R1O, R2O, R3O, R4O, R5O, R6O, R7O, R8O, SPO,RAMO,IMMO: STD_LOGIC_VECTOR (31 downto 0);
+	signal CODE_ADDRESS, CODE_INSTRUCTION: STD_LOGIC_VECTOR (31 downto 0);
 	
 	-- RAM read enable (to avoid sim. read/writes)
 	signal RAMREADEN: STD_LOGIC;
 	
 begin
-	CONTROL : entity work.CONTROL port map(CLK,RESET,CONTR,IMMO,FLAGS,SPINC,SPDEC,bus3);
+
+	CODEROM : entity work.CODEROM port map(CODE_ADDRESS, CODE_INSTRUCTION);
+
+	CONTROL : entity work.CONTROL port map(CLK,RESET,CONTR,IMMO,FLAGS,SPINC,SPDEC,bus3, CODE_ADDRESS, CODE_INSTRUCTION);
 
 	-- Simply mirror parts of the CONTR to the driver signals
 	LD3 <= CONTR(3 downto 0);

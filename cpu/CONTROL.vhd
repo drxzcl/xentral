@@ -41,7 +41,9 @@ entity CONTROL is
            FLAGS: in  STD_LOGIC_VECTOR (7 downto 0);
 			  SPINC: out STD_LOGIC; -- Control the inc/dec of the
 			  SPDEC: out STD_LOGIC; -- stack pointer register.
-			  NPC: in STD_LOGIC_VECTOR (31 downto 0)
+			  NPC: in STD_LOGIC_VECTOR (31 downto 0);
+			  CODEROM_ADDRESS: out STD_LOGIC_VECTOR(31 downto 0);
+			  CODEROM_INSTRUCTION: in STD_LOGIC_VECTOR(31 downto 0)
 			  );
 end CONTROL;
 
@@ -54,10 +56,9 @@ signal PHASE: STD_LOGIC_VECTOR (3 downto 0); -- for multiclock instructions
 
 begin
 
-	CODEROM : entity work.CODEROM port map(PC,IR);
-	
-	
-
+	--CODEROM : entity work.CODEROM port map(PC,IR);
+	CODEROM_ADDRESS <= PC;
+	IR <= CODEROM_INSTRUCTION;
 
 process(clk)
 begin
