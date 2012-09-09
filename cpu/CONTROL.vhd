@@ -36,10 +36,7 @@ use IEEE.STD_LOGIC_SIGNED.ALL;
 entity CONTROL is
     Port ( CLK : in STD_LOGIC;
 			  RESET: in STD_LOGIC;
-			  DR1 : out  STD_LOGIC_VECTOR (3 downto 0);
-           DR2 : out  STD_LOGIC_VECTOR (3 downto 0);
-           LD3 : out  STD_LOGIC_VECTOR (3 downto 0);
-           OP : out  STD_LOGIC_VECTOR (3 downto 0);
+			  CONTR: out STD_LOGIC_VECTOR (31 downto 0);
            IMM : out  STD_LOGIC_VECTOR (31 downto 0);
            FLAGS: in  STD_LOGIC_VECTOR (7 downto 0);
 			  SPINC: out STD_LOGIC; -- Control the inc/dec of the
@@ -50,7 +47,7 @@ end CONTROL;
 
 architecture Behavioral of CONTROL is
 
-signal CONTR: STD_LOGIC_VECTOR (31 downto 0);
+--signal CONTR: STD_LOGIC_VECTOR (31 downto 0);
 signal IR: STD_LOGIC_VECTOR (31 downto 0);
 signal PC: STD_LOGIC_VECTOR (31 downto 0);
 signal PHASE: STD_LOGIC_VECTOR (3 downto 0); -- for multiclock instructions
@@ -59,11 +56,7 @@ begin
 
 	CODEROM : entity work.CODEROM port map(PC,IR);
 	
-	-- Simply mirror parts of the CONTR to the driver signals
-	LD3 <= CONTR(3 downto 0);
-	DR2 <= CONTR(7 downto 4);
-	DR1 <= CONTR(11 downto 8);
-	OP <= CONTR(15 downto 12);	
+	
 
 
 process(clk)

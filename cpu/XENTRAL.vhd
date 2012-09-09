@@ -48,6 +48,9 @@ architecture Behavioral of XENTRAL is
 	signal LD3: STD_LOGIC_VECTOR (3 downto 0);
 	signal OP: STD_LOGIC_VECTOR (3 downto 0);
 
+
+	signal CONTR: STD_LOGIC_VECTOR (31 downto 0);
+
 	signal LDEN: STD_LOGIC_VECTOR (15 downto 0);
 	
 	signal ALUFLAGS: STD_LOGIC_VECTOR (3 downto 0);
@@ -63,7 +66,13 @@ architecture Behavioral of XENTRAL is
 	signal RAMREADEN: STD_LOGIC;
 	
 begin
-	CONTROL : entity work.CONTROL port map(CLK,RESET,DR1,DR2,LD3,OP,IMMO,FLAGS,SPINC,SPDEC,bus3);
+	CONTROL : entity work.CONTROL port map(CLK,RESET,CONTR,IMMO,FLAGS,SPINC,SPDEC,bus3);
+
+	-- Simply mirror parts of the CONTR to the driver signals
+	LD3 <= CONTR(3 downto 0);
+	DR2 <= CONTR(7 downto 4);
+	DR1 <= CONTR(11 downto 8);
+   OP <= CONTR(15 downto 12);	
 	
 	ALU1 : entity work.ALU port map(bus1,bus2,OP,bus3,ALUFLAGS);
 	
