@@ -46,15 +46,29 @@ ARCHITECTURE behavior OF TEST_XENTRAL IS
 			
 			bus1: inout STD_LOGIC_VECTOR (31 downto 0);
 			bus2: inout STD_LOGIC_VECTOR (31 downto 0);
-			bus3: inout STD_LOGIC_VECTOR (31 downto 0)
+			bus3: inout STD_LOGIC_VECTOR (31 downto 0);
+			CODE_ADDRESS: out STD_LOGIC_VECTOR (31 downto 0);
+			CODE_INSTRUCTION: in STD_LOGIC_VECTOR (31 downto 0)			
         );
     END COMPONENT;
     
 
+COMPONENT CODEROM
+    Port ( MAR : in  STD_LOGIC_VECTOR (31 downto 0);
+           MCR : out  STD_LOGIC_VECTOR (31 downto 0)
+			  			  
+			  );
+end COMPONENT;
+
    --Inputs
    signal clk : std_logic := '0';
    signal reset : std_logic := '0';
-   
+
+	signal inst: STD_LOGIC_VECTOR (31 downto 0);
+	
+	-- Out
+	signal pc: STD_LOGIC_VECTOR (31 downto 0);
+
 	--BiDirs
 	signal bus1:  STD_LOGIC_VECTOR (31 downto 0);
 	signal bus2:  STD_LOGIC_VECTOR (31 downto 0);
@@ -64,6 +78,14 @@ ARCHITECTURE behavior OF TEST_XENTRAL IS
    constant clk_period : time := 10 ns;
  
 BEGIN
+
+
+
+	-- Instantiate the test code
+   testcode: CODEROM PORT MAP (
+		pc, inst
+        );
+	
  
 	-- Instantiate the Unit Under Test (UUT)
    uut: XENTRAL PORT MAP (
@@ -71,8 +93,13 @@ BEGIN
           reset => reset,
           bus1 => bus1,
           bus2 => bus2,
-          bus3 => bus3
+          bus3 => bus3,
+			 CODE_ADDRESS => pc,
+			 CODE_INSTRUCTION => inst
+			 
         );
+
+
 
    -- Clock process definitions
    clk_process :process
