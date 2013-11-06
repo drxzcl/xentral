@@ -1,5 +1,3 @@
-syntax: glob
-
 *.html
 *.tcl
 *.gise
